@@ -29,7 +29,7 @@ static char THIS_FILE[] = __FILE__;
 #endif
 
 
-#define     VERSION     "ManageDsk v0.21 "
+#define     VERSION     "ManageDsk v0.22 "
 
 #define     SIZE_X_1_WINDOWS    498
 #define     SIZE_X_2_WINDOWS    990
@@ -144,6 +144,7 @@ BEGIN_MESSAGE_MAP(CManageDskDlg, CDialog)
 	ON_BN_CLICKED(IDC_EDIT_SECTEURS, OnEditSecteurs1)
 	ON_BN_CLICKED(IDC_RADIO_EXP_ASCII, OnRadioExpAscii1)
 	ON_BN_CLICKED(IDC_RADIO_EXP_BIN, OnRadioExpBin1)
+	ON_BN_CLICKED(IDC_RADIO_EXP_AUTO, OnRadioExpAuto1)
 	ON_BN_CLICKED(IDC_EDIT_FIC, OnEditFic1)
 	ON_BN_CLICKED(IDC_READ_FLOPPY, OnReadFloppy1)
 	ON_BN_CLICKED(IDC_WRITE_FLOPPY, OnWriteFloppy1)
@@ -1633,3 +1634,4 @@ void CManageDskDlg::OnCustomDrawList(int nDSK, NMHDR * pNMHDR)
 		lpLVCustomDraw->clrText = RGB(atoi(s) == USER_DELETED ? 255 : 0, 0, 0);
 	}
 }
+

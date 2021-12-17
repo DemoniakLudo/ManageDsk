@@ -8,7 +8,7 @@
 //
 
 
-enum { MODE_ASCII, MODE_BINAIRE, MODE_USER };
+enum { MODE_ASCII, MODE_BINAIRE, MODE_USER, MODE_AUTO };
 
 
 /////////////////////////////////////////////////////////////////////////////

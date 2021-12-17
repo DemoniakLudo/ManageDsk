@@ -174,7 +174,10 @@
 #define IDC_NB_SECTS                    1139
 #define IDC_EDIT1                       1140
 #define IDC_START_ASM                   1141
+#define IDC_RADIO1                      1141
+#define IDC_RADIO_EXP_AUTO              1141
 #define IDC_NBSECTS                     1142
+#define IDC_RADIO_EXP_AUTO2             1142
 #define IDC_CHECK1                      1143
 #define IDC_KILL                        1144
 #define IDC_COL00                       9200
@@ -211,9 +214,9 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        145
+#define _APS_NEXT_RESOURCE_VALUE        146
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1141
+#define _APS_NEXT_CONTROL_VALUE         1143
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

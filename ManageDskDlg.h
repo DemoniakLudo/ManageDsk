@@ -80,7 +80,8 @@ protected:
     afx_msg void OnRadioForceAscii1() { TypeModeImport[ DSK_0 ] = MODE_ASCII; }
     afx_msg void OnRadioExpBin1() { TypeModeExport[ DSK_0 ] = MODE_BINAIRE; }
     afx_msg void OnRadioExpAscii1() { TypeModeExport[ DSK_0 ] = MODE_ASCII; }
-    afx_msg void OnRadioForceBin1() { TypeModeImport[ DSK_0 ] = MODE_BINAIRE; }
+	afx_msg void OnRadioExpAuto1() { TypeModeExport[DSK_0] = MODE_AUTO; }
+	afx_msg void OnRadioForceBin1() { TypeModeImport[ DSK_0 ] = MODE_BINAIRE; }
     afx_msg void OnRadioChoix1() { TypeModeImport[ DSK_0 ] = MODE_USER; }
     afx_msg void OnSauveDirect1() { OnSauveDirect( DSK_0 ); }
     afx_msg void OnDblclkList1( NMHDR * pNMHDR, LRESULT * pResult )
@@ -115,7 +116,8 @@ protected:
     afx_msg void OnSupprime2() { OnSupprime( DSK_1 ); }
     afx_msg void OnRadioForceAscii2() { TypeModeImport[ DSK_1 ] = MODE_ASCII; }
     afx_msg void OnRadioExpBin2() { TypeModeExport[ DSK_1 ] = MODE_BINAIRE; }
-    afx_msg void OnRadioExpAscii2() { TypeModeExport[ DSK_1 ] = MODE_ASCII; }
+	afx_msg void OnRadioExpAuto2() { TypeModeExport[ DSK_1 ] = MODE_AUTO; }
+	afx_msg void OnRadioExpAscii2() { TypeModeExport[ DSK_1 ] = MODE_ASCII; }
     afx_msg void OnRadioForceBin2() { TypeModeImport[ DSK_1 ] = MODE_BINAIRE; }
     afx_msg void OnRadioChoix2() { TypeModeImport[ DSK_1 ] = MODE_USER; }
     afx_msg void OnSauveDirect2() { OnSauveDirect( DSK_1 ); }
@@ -222,6 +224,8 @@ private:
     BOOL IsDsk[ 2 ], IsDskValid[ 2 ], IsDskSaved[ 2 ];
     int TypeModeImport[ 2 ], TypeModeExport[ 2 ];
     int Langue;
+public:
+	afx_msg void OnBnClickedRadioExpAuto();
 };
 
 
