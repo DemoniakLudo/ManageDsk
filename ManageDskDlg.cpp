@@ -71,6 +71,8 @@ void CManageDskDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_STATIC_MODE_EXP, m_ModeExport[DSK_0]);
 	DDX_Control(pDX, IDC_RADIO_EXP_BIN, m_RadioExpBin[DSK_0]);
 	DDX_Control(pDX, IDC_RADIO_EXP_ASCII, m_RadioExpAscii[DSK_0]);
+	DDX_Control(pDX, IDC_RADIO_EXP_AUTO, m_RadioExpAuto[DSK_0]);
+
 	DDX_Control(pDX, IDC_EDIT_SECTEURS, m_Secteurs[DSK_0]);
 	DDX_Control(pDX, IDC_SAUVE_DIRECT, m_BpSauveDirect[DSK_0]);
 	DDX_Control(pDX, IDC_STATIC_MODE_AJ, m_ModeAjout[DSK_0]);
@@ -97,6 +99,8 @@ void CManageDskDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_STATIC_MODE_EXP2, m_ModeExport[DSK_1]);
 	DDX_Control(pDX, IDC_RADIO_EXP_BIN2, m_RadioExpBin[DSK_1]);
 	DDX_Control(pDX, IDC_RADIO_EXP_ASCII2, m_RadioExpAscii[DSK_1]);
+	DDX_Control(pDX, IDC_RADIO_EXP_AUTO2, m_RadioExpAuto[DSK_1]);
+
 	DDX_Control(pDX, IDC_EDIT_SECTEURS2, m_Secteurs[DSK_1]);
 	DDX_Control(pDX, IDC_SAUVE_DIRECT2, m_BpSauveDirect[DSK_1]);
 	DDX_Control(pDX, IDC_STATIC_MODE_AJ2, m_ModeAjout[DSK_1]);
@@ -214,13 +218,13 @@ BOOL CManageDskDlg::OnInitDialog()
 
 	m_RadioChoix[DSK_0].SetCheck(1);
 	OnRadioChoix1();
-	m_RadioExpBin[DSK_0].SetCheck(1);
-	OnRadioExpBin1();
+	m_RadioExpAuto[DSK_0].SetCheck(1);
+	OnRadioExpAuto1();
 
 	m_RadioChoix[DSK_1].SetCheck(1);
 	OnRadioChoix2();
-	m_RadioExpBin[DSK_1].SetCheck(1);
-	OnRadioExpBin2();
+	m_RadioExpAuto[DSK_1].SetCheck(1);
+	OnRadioExpAuto2();
 
 	OnDblWindow();
 	SetInterface(LOC_FRANCAIS);
@@ -935,40 +939,24 @@ int CManageDskDlg::GetFic(int nDSK, int Indice, int Ko, BYTE * BufOut, BOOL Stri
 //
 // Export de fichiers
 //
-void CManageDskDlg::OnExport(int nDSK)
-{
+void CManageDskDlg::OnExport(int nDSK) {
 	static char LastDir[2][256];
 	DWORD Lg;
 
 	CListCtrl * Liste = &m_Liste[nDSK];
 	POSITION pos = Liste->GetFirstSelectedItemPosition();
-	while (pos)
-	{
+	while (pos) {
 		int nItem = Liste->GetNextSelectedItem(pos);
 		Liste->GetItemText(nItem, COL_TAILLE, Msg, sizeof(Msg));
 		int Ko = atoi(Msg);
 		// Recherche le direntry correspondant
 		int Indice = PosItem[nDSK][nItem];
-		CFileDialog SelectFic(FALSE
-			, NULL
-			, GetNomAmsdos(TabDir[nDSK][Indice].Nom)
-			, OFN_OVERWRITEPROMPT
-			, NULL
-		);
+		CFileDialog SelectFic(FALSE, NULL, GetNomAmsdos(TabDir[nDSK][Indice].Nom), OFN_OVERWRITEPROMPT, NULL);
 		SelectFic.m_ofn.lpstrInitialDir = LastDir[nDSK];
-		if (SelectFic.DoModal() == IDOK)
-		{
+		if (SelectFic.DoModal() == IDOK) {
 			strcpy(LastDir[nDSK], SelectFic.GetPathName());
-			HANDLE f = CreateFile(SelectFic.GetPathName()
-				, GENERIC_WRITE
-				, 0
-				, NULL
-				, CREATE_ALWAYS
-				, 0
-				, NULL
-			);
-			if (f != INVALID_HANDLE_VALUE)
-			{
+			HANDLE f = CreateFile(SelectFic.GetPathName(), GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, 0, NULL);
+			if (f != INVALID_HANDLE_VALUE) {
 				int NbOctets = GetFic(nDSK, Indice, Ko, BufFicTmp);
 				WriteFile(f, BufFicTmp, NbOctets, &Lg, NULL);
 				CloseHandle(f);

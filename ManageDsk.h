@@ -9,7 +9,7 @@
 #endif // _MSC_VER > 1000
 
 #ifndef __AFXWIN_H__
-    #error include 'stdafx.h' before including this file for PCH
+#error include 'stdafx.h' before including this file for PCH
 #endif
 
 #include "resource.h"        // main symbols
@@ -22,26 +22,26 @@
 class CManageDskApp : public CWinApp
 {
 public:
-    CManageDskApp();
+	CManageDskApp();
 
-// Overrides
-    // ClassWizard generated virtual function overrides
-    //{{AFX_VIRTUAL(CManageDskApp)
-    public:
-    virtual BOOL InitInstance();
-    //}}AFX_VIRTUAL
+	// Overrides
+		// ClassWizard generated virtual function overrides
+		//{{AFX_VIRTUAL(CManageDskApp)
+public:
+	virtual BOOL InitInstance();
+	//}}AFX_VIRTUAL
 // Implementation
 
-    //{{AFX_MSG(CManageDskApp)
-    //}}AFX_MSG
-    DECLARE_MESSAGE_MAP()
+	//{{AFX_MSG(CManageDskApp)
+	//}}AFX_MSG
+	DECLARE_MESSAGE_MAP()
 
-private :
-    char * GetArg( char * argc );
-    char * Argument( char * argc );
-    void DecomposeArg( char * argc );
-    void AjouteFichiers( int nDSK, char * masque );
-    void AjouteFichierEntete( int nDSK, char * param );
+private:
+	char * GetArg(char * argc);
+	char * Argument(char * argc);
+	void DecomposeArg(char * argc);
+	void AjouteFichiers(int nDSK, char * masque);
+	void AjouteFichierEntete(int nDSK, char * param);
 };
 
 
