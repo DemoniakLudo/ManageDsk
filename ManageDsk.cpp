@@ -19,6 +19,30 @@ static char THIS_FILE[] = __FILE__;
 #endif
 
 
+//
+// Tableau de décryptage d'un programme en basic protégé
+//
+static BYTE AMSDOS_KEY[128] =
+{
+0xAB, 0x2C, 0xED, 0xEA, 0x6C, 0x37, 0x3F, 0xEC,
+0x9B, 0xDF, 0x7A, 0x0C, 0x3B, 0xD4, 0x6D, 0xF5,
+0x04, 0x44, 0x03, 0x11, 0xDF, 0x59, 0x8F, 0x21,
+0x73, 0x7A, 0xCC, 0x83, 0xDD, 0x30, 0x6A, 0x30,
+0xD3, 0x8F, 0x02, 0xF0, 0x60, 0x6B, 0x94, 0xE4,
+0xB7, 0xF3, 0x03, 0xA8, 0x60, 0x88, 0xF0, 0x43,
+0xE8, 0x8E, 0x43, 0xA0, 0xCA, 0x84, 0x31, 0x53,
+0xF3, 0x1F, 0xC9, 0xE8, 0xAD, 0xC0, 0xBA, 0x6D,
+0x93, 0x08, 0xD4, 0x6A, 0x2C, 0xB2, 0x07, 0x27,
+0xC0, 0x99, 0xEE, 0x89, 0xAF, 0xC3, 0x53, 0xAB,
+0x2B, 0x34, 0x5C, 0x2F, 0x13, 0xEE, 0xAA, 0x2C,
+0xD9, 0xF4, 0xBC, 0x12, 0xB3, 0xC5, 0x1C, 0x68,
+0x01, 0x20, 0x2C, 0xFA, 0x77, 0xA6, 0xB5, 0xA4,
+0xFC, 0x9B, 0xF1, 0x32, 0x5B, 0xC3, 0x70, 0x77,
+0x85, 0x36, 0xBE, 0x5B, 0x8C, 0xC8, 0xB5, 0xC2,
+0xF0, 0x0B, 0x98, 0x0F, 0x36, 0x9D, 0xD8, 0x96
+};
+
+
 /********************************************************* !NAME! **************
 * Nom : Retour
 ********************************************************** !PATHS! *************
@@ -243,19 +267,37 @@ void CManageDskApp::AjouteFichierEntete( int nDSK, char * FicInfo )
 
                 char * NomAmsdos = GetNomAmsdos( ( BYTE * )amsFile );
                 int t = 0;
-                if ( ! ( strncmp( type, "BIN", 3 ) ) )
+                if (!(strncmp(type, "BIN", 3)))
                     t = 2;
 
                 if ( strncmp( type, "ASC", 3 ) )
+                    // Not ASCII
                     {
                     char * p = strchr( type, '/' );
-                    if ( p )
+                    if (p)
+                    {
+
+                        *p = 0;
+                        if (strncmp(p+1, "P", 1)==0)
                         {
-                        *p++ = 0; // Isoler le type
-                        start = atoi( p );
-                        p = strchr( p, '/' );
-                        if ( p )
-                            exec = atoi( ++p );
+                            ++t; // Add protection bit
+
+                            for (int t = 0; t < length; ++t)
+                            {
+                                Buff[sizeof(StAmsdos) + t] ^= AMSDOS_KEY[t % sizeof(AMSDOS_KEY)];
+                            }
+
+                            p = strchr(++p, '/');
+
+                        }
+
+                        if (p)
+                        {
+                            start = atoi(++p);
+                            p = strchr(p, '/');
+                            if (p)
+                                exec = atoi(++p);
+                        }
 
                         StAmsdos * Entete =  CreeEnteteComplet( NomAmsdos
                                                               , t
