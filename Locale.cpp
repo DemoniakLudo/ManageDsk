@@ -1,3 +1,5 @@
+#define WINDOWS_IGNORE_PACKING_MISMATCH
+
 #include  <windows.h>
 
 #include  "Locale.h"

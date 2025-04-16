@@ -13,14 +13,14 @@
 #endif
 
 #include "resource.h"        // main symbols
+#include "GestDsk.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CManageDskApp:
 // See ManageDsk.cpp for the implementation of this class
 //
 
-class CManageDskApp : public CWinApp
-{
+class CManageDskApp : public CWinApp {
 public:
 	CManageDskApp();
 
@@ -37,11 +37,13 @@ public:
 	DECLARE_MESSAGE_MAP()
 
 private:
-	char * GetArg(char * argc);
-	char * Argument(char * argc);
-	void DecomposeArg(char * argc);
-	void AjouteFichiers(int nDSK, char * masque);
-	void AjouteFichierEntete(int nDSK, char * param);
+	char* GetArg(char* argc);
+	char* Argument(char* argc);
+	void DecomposeArg(char* argc);
+	void AjouteFichiers(int nDSK, char* masque);
+	void AjouteFichierEntete(int nDSK, char* param);
+	void ExportFichier(int nDSK, char* masque, bool withEntete);
+	int CManageDskApp::GetFic(int nDSK, StDirEntry* Dir, int Ko, BYTE* BufOut);
 };
 
 

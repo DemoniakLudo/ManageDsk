@@ -762,7 +762,7 @@ void CViewFile::OnMode2()
 //
 // Sauvegarde au format .WIN d'OCP Art Studio
 //
-void CViewFile::SaveWin( HANDLE f, char * NomFic )
+void CViewFile::SaveWin( HANDLE f, char * nomFic )
 {
     DWORD Lg;
     BYTE EndWin[ 5 ];
@@ -773,7 +773,7 @@ void CViewFile::SaveWin( HANDLE f, char * NomFic )
         //
         // Ajoute en-tête amsdos
         //
-        StAmsdos * e = CreeEnteteAmsdos( NomFic, ( USHORT )( Longueur + 5 ) );
+        StAmsdos * e = CreeEnteteAmsdos( nomFic, ( USHORT )( Longueur + 5 ) );
         WriteFile( f, e, sizeof( StAmsdos ), &Lg, NULL );
         }
     int Start = CurLigne;

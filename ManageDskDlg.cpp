@@ -29,7 +29,7 @@ static char THIS_FILE[] = __FILE__;
 #endif
 
 
-#define     VERSION     "ManageDsk v0.22 "
+#define     VERSION     "ManageDsk v0.23 "
 
 #define     SIZE_X_1_WINDOWS    498
 #define     SIZE_X_2_WINDOWS    990
