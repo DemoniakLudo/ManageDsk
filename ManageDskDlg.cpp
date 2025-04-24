@@ -42,8 +42,7 @@ static BYTE BufFicTmp[0x100000];
 // CManageDskDlg dialog
 
 CManageDskDlg::CManageDskDlg(CWnd* pParent /*=NULL*/)
-	: CDialog(CManageDskDlg::IDD, pParent)
-{
+	: CDialog(CManageDskDlg::IDD, pParent) {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 	//{{AFX_DATA_INIT(CManageDskDlg)
 	//}}AFX_DATA_INIT
@@ -53,8 +52,7 @@ CManageDskDlg::CManageDskDlg(CWnd* pParent /*=NULL*/)
 }
 
 
-void CManageDskDlg::DoDataExchange(CDataExchange* pDX)
-{
+void CManageDskDlg::DoDataExchange(CDataExchange* pDX) {
 	CDialog::DoDataExchange(pDX);
 	//{{AFX_DATA_MAP(CManageDskDlg)
 	DDX_Control(pDX, IDC_BP_EN, m_BpEn);
@@ -202,8 +200,7 @@ enum { COL_NOM, COL_USER, COL_READONLY, COL_HIDDEN, COL_TYPE, COL_TAILLE };
 //
 // Initialisation de l'interface
 //
-BOOL CManageDskDlg::OnInitDialog()
-{
+BOOL CManageDskDlg::OnInitDialog() {
 	CDialog::OnInitDialog();
 
 	SetIcon(m_hIcon, TRUE);
@@ -244,12 +241,10 @@ BOOL CManageDskDlg::OnInitDialog()
 }
 
 
-void CManageDskDlg::BoutonsOn(int NumDsk)
-{
+void CManageDskDlg::BoutonsOn(int NumDsk) {
 	m_BpSend[DSK_0].EnableWindow(IsDskValid[DSK_0]);
 	m_BpSend[DSK_1].EnableWindow(IsDskValid[DSK_1]);
-	if (IsDskValid[DSK_0] && IsDskValid[DSK_1])
-	{
+	if (IsDskValid[DSK_0] && IsDskValid[DSK_1]) {
 		m_BpSwapDsk.EnableWindow(TRUE);
 		m_BpCompare.EnableWindow(TRUE);
 	}
@@ -268,8 +263,7 @@ void CManageDskDlg::BoutonsOn(int NumDsk)
 }
 
 
-void CManageDskDlg::BoutonsOff(int NumDsk)
-{
+void CManageDskDlg::BoutonsOff(int NumDsk) {
 	m_BpSend[NumDsk].EnableWindow(FALSE);
 	m_BpSwapDsk.EnableWindow(FALSE);
 	m_BpCompare.EnableWindow(FALSE);
@@ -288,8 +282,7 @@ void CManageDskDlg::BoutonsOff(int NumDsk)
 }
 
 
-BOOL CManageDskDlg::IsReadable(int nDSK)
-{
+BOOL CManageDskDlg::IsReadable(int nDSK) {
 	return(::IsReadable(nDSK));
 }
 
@@ -297,15 +290,14 @@ BOOL CManageDskDlg::IsReadable(int nDSK)
 //
 // Fonction de tri des fichiers
 //
-int __cdecl FctTri(const void * a1, const void * a2)
-{
+int __cdecl FctTri(const void* a1, const void* a2) {
 	static char Nom1[12];
 	static char Nom2[12];
 
 	memset(Nom1, 0, sizeof(Nom1));
 	memset(Nom2, 0, sizeof(Nom2));
-	memcpy(Nom1, (char *)((StDirEntry *)a1)->Nom, 11);
-	memcpy(Nom2, (char *)((StDirEntry *)a2)->Nom, 11);
+	memcpy(Nom1, (char*)((StDirEntry*)a1)->Nom, 11);
+	memcpy(Nom2, (char*)((StDirEntry*)a2)->Nom, 11);
 
 	//BYTE User1 = ( ( StDirEntry * )a1 )->User;
 	//BYTE User2 = ( ( StDirEntry * )a2 )->User;
@@ -316,15 +308,14 @@ int __cdecl FctTri(const void * a1, const void * a2)
 	// Masquer les bits 7 dans les noms (par exemples : bits d'attributs)
 	//
 	Nom1[11] = Nom2[11] = 0;
-	for (int i = 0; i < 11; i++)
-	{
+	for (int i = 0; i < 11; i++) {
 		Nom1[i] &= 0x7F;
 		Nom2[i] &= 0x7F;
 	}
 
 	int a = strcmp(Nom1, Nom2);
 	if (!a)
-		a = ((StDirEntry *)a1)->NumPage - ((StDirEntry *)a2)->NumPage;
+		a = ((StDirEntry*)a1)->NumPage - ((StDirEntry*)a2)->NumPage;
 
 	return(a);
 }
@@ -333,9 +324,8 @@ int __cdecl FctTri(const void * a1, const void * a2)
 //
 // Lecture et affichage du contenu d'un fichier DSK
 //
-void CManageDskDlg::ReadDirDsk(int nDSK)
-{
-	CListCtrl * Liste = &m_Liste[nDSK];
+void CManageDskDlg::ReadDirDsk(int nDSK) {
+	CListCtrl* Liste = &m_Liste[nDSK];
 	int i;
 	//
 	// Tout remettre à zéro
@@ -351,9 +341,9 @@ void CManageDskDlg::ReadDirDsk(int nDSK)
 		//
 		for (i = 0; i < 64; i++)
 			memcpy(&TabDir[nDSK][i]
-				, GetInfoDirEntry(nDSK, i)
+			, GetInfoDirEntry(nDSK, i)
 				, sizeof(StDirEntry)
-			);
+				);
 
 		// Trier les fichiers
 		qsort(TabDir[nDSK], 64, sizeof(TabDir[0][0]), FctTri);
@@ -361,12 +351,10 @@ void CManageDskDlg::ReadDirDsk(int nDSK)
 		//
 		// Affichage...
 		//
-		for (i = 0; i < 64; i++)
-		{
-			StDirEntry * Dir = &TabDir[nDSK][i];
+		for (i = 0; i < 64; i++) {
+			StDirEntry* Dir = &TabDir[nDSK][i];
 			SetInfoDirEntry(nDSK, i, Dir);
-			if (!Dir->NumPage)
-			{
+			if (!Dir->NumPage) {
 				char Nom[13];
 				memcpy(Nom, Dir->Nom, 8);
 
@@ -375,8 +363,7 @@ void CManageDskDlg::ReadDirDsk(int nDSK)
 					if (Nom[c])
 						IsNomValid = TRUE;
 
-				if (IsNomValid)
-				{
+				if (IsNomValid) {
 					memcpy(&Nom[9], Dir->Ext, 3);
 					Nom[8] = '.';
 					Nom[12] = 0;
@@ -387,8 +374,8 @@ void CManageDskDlg::ReadDirDsk(int nDSK)
 						Nom[j] &= 0x7F;
 
 					int User = Dir->User;
-					Liste->InsertItem(NbItems, GetNomAmsdos((BYTE *)Nom));
-					StAmsdos * Ams = (StAmsdos *)ReadBloc(nDSK, Dir->Blocks[0]);
+					Liste->InsertItem(NbItems, GetNomAmsdos((BYTE*)Nom));
+					StAmsdos* Ams = (StAmsdos*)ReadBloc(nDSK, Dir->Blocks[0]);
 					Liste->SetItemText(NbItems, COL_USER, GetUser(User));
 					Liste->SetItemText(NbItems, COL_READONLY, Dir->Ext[0] & 0x80 ? "[X]" : "");
 					Liste->SetItemText(NbItems, COL_HIDDEN, Dir->Ext[1] & 0x80 ? "[X]" : "");
@@ -398,15 +385,13 @@ void CManageDskDlg::ReadDirDsk(int nDSK)
 					// Calcule la taille du fichier en fonction du nombre de blocs
 					//
 					int p = 0, t = 0;
-					do
-					{
-						if (TabDir[nDSK][p + i].User == Dir->User
-							&& !CompareNomsAmsdos((char *)TabDir[nDSK][p + i].Nom, (char *)Dir->Nom)
-							)
+					do {
+						if (TabDir[nDSK][p + i].User == Dir->User && !CompareNomsAmsdos((char*)TabDir[nDSK][p + i].Nom, (char*)Dir->Nom))
 							t += TabDir[nDSK][p + i].NbPages;
 
 						p++;
-					} while (TabDir[nDSK][p + i].NumPage && (p + i) < 64);
+					}
+					while (TabDir[nDSK][p + i].NumPage && (p + i) < 64);
 					Liste->SetItemText(NbItems, COL_TAILLE, GetTaille((t + 7) >> 3));
 					PosItem[nDSK][NbItems++] = i;
 				}
@@ -429,41 +414,38 @@ void CManageDskDlg::ReadDirDsk(int nDSK)
 //
 // Ajouter un fichier
 //
-void CManageDskDlg::AjouteUnFic(char * Nom, int nDSK)
-{
+void CManageDskDlg::AjouteUnFic(char* Nom, int nDSK) {
 	static BYTE Buff[0x80000];
 	char NomFic[16];
 	DWORD Lg;
 	int LgE = sizeof(StAmsdos);       // Taille En-tête
 
-	if (IsDskValid[nDSK])
-	{
-		char * p = Nom;
-		char * q = p;
-		char * r;
+	if (IsDskValid[nDSK]) {
+		char* p = Nom;
+		char* q = p;
+		char* r;
 		//
 			// Normalise le nom du fichier en cours
 		//
-		do
-		{
+		do {
 			r = strchr(q, ':');
 			if (!r)
 				r = strchr(q, '\\');
 
 			if (r)
 				q = ++r;
-		} while (r);
-		strcpy(NomFic, GetNomAmsdos((BYTE *)q));
+		}
+		while (r);
+		strcpy(NomFic, GetNomAmsdos((BYTE*)q));
 
 		HANDLE fp = CreateFile(p, GENERIC_READ, 0, NULL, OPEN_EXISTING, 0, NULL);
-		if (fp != INVALID_HANDLE_VALUE)
-		{
+		if (fp != INVALID_HANDLE_VALUE) {
 			memset(Buff, 0, sizeof(Buff));
 			// Lecture fichier
 			ReadFile(fp, &Buff, sizeof(Buff), &Lg, NULL);
 			CloseHandle(fp);
 			BOOL AjouteEntete = FALSE;
-			StAmsdos * e = (StAmsdos *)Buff;
+			StAmsdos* e = (StAmsdos*)Buff;
 			// Attention : longueur > 64Ko !
 			BOOL FicValid = TRUE;
 			if (Lg > 0x10080)
@@ -472,8 +454,7 @@ void CManageDskDlg::AjouteUnFic(char * Nom, int nDSK)
 					, MB_YESNO | MB_ICONQUESTION
 				) == IDYES
 					);
-			if (FicValid)
-			{
+			if (FicValid) {
 				//
 				// Regarde si le fichier contient une en-tête ou non
 				//
@@ -487,14 +468,12 @@ void CManageDskDlg::AjouteUnFic(char * Nom, int nDSK)
 				//
 				// En fonction du mode d'importation...
 				//
-				switch (TypeModeImport[nDSK])
-				{
+				switch (TypeModeImport[nDSK]) {
 				case MODE_ASCII:
 					//
 					// Importation en mode ASCII
 					//
-					if (IsAmsdos)
-					{
+					if (IsAmsdos) {
 						// Supprmier en-tête si elle existe
 						memcpy(Buff, &Buff[LgE], Lg - LgE);
 						Lg -= LgE;
@@ -533,13 +512,11 @@ void CManageDskDlg::AjouteUnFic(char * Nom, int nDSK)
 			//
 			// Si fichier ok pour être importé
 			//
-			if (FicValid)
-			{
+			if (FicValid) {
 				if (m_Nettoie.GetCheck() /*&& IsAmsdos*/)
 					ClearAmsdos(Buff);
 
-				if (AjouteEntete)
-				{
+				if (AjouteEntete) {
 					// Ajoute l'en-tête amsdos si nécessaire
 					memmove(&Buff[LgE], Buff, Lg);
 					memcpy(Buff, e, LgE);
@@ -563,8 +540,7 @@ void CManageDskDlg::AjouteUnFic(char * Nom, int nDSK)
 //
 // Ajouter des fichiers
 //
-void CManageDskDlg::OnAjoutefic(int nDSK)
-{
+void CManageDskDlg::OnAjoutefic(int nDSK) {
 	static char Noms[0x1000];
 	static char LastDir[2][256];
 
@@ -578,16 +554,14 @@ void CManageDskDlg::OnAjoutefic(int nDSK)
 	f.m_ofn.lpstrFile = Noms;
 	f.m_ofn.nMaxFile = sizeof(Noms);
 	f.m_ofn.lpstrInitialDir = LastDir[nDSK];
-	if (f.DoModal() != IDCANCEL)
-	{
+	if (f.DoModal() != IDCANCEL) {
 		POSITION PosFic = f.GetStartPosition();
-		while (PosFic)
-		{
+		while (PosFic) {
 			//
 			// Parcourir tous les fichiers sélectionnés
 			//
 			CString Path = f.GetNextPathName(PosFic);
-			char * p = (char *)(const char *)Path;
+			char* p = (char*)(const char*)Path;
 			strcpy(LastDir[nDSK], p);
 			AjouteUnFic(p, nDSK);
 		}
@@ -598,8 +572,7 @@ void CManageDskDlg::OnAjoutefic(int nDSK)
 //
 // Créer un DSK vierge
 //
-void CManageDskDlg::OnCreer(int nDSK)
-{
+void CManageDskDlg::OnCreer(int nDSK) {
 	IsDsk[nDSK] = IsDskValid[nDSK] = IsDskSaved[nDSK] = TRUE;
 	FormatDsk(nDSK, 9, m_MaxPistes.GetCheck() ? MAX_TRACKS : MAX_PISTE_STD);
 	ReadDirDsk(nDSK);
@@ -614,22 +587,18 @@ void CManageDskDlg::OnCreer(int nDSK)
 }
 
 
-void CManageDskDlg::CheckInterlace(int nDSK)
-{
+void CManageDskDlg::CheckInterlace(int nDSK) {
 	BOOL Interlace = TRUE;
 	int t, NbTracks = GetNbTracks(nDSK);
 
 	for (t = 0; t < NbTracks; t++)
-		if (!IsTrackInterlaced(nDSK, t))
-		{
+		if (!IsTrackInterlaced(nDSK, t)) {
 			Interlace = FALSE;
 			break;
 		}
 
-	if (!Interlace)
-	{
-		if (MessageBox(GetTexteLoc(110), NULL, MB_YESNO) == IDYES)
-		{
+	if (!Interlace) {
+		if (MessageBox(GetTexteLoc(110), NULL, MB_YESNO) == IDYES) {
 			IsDskSaved[nDSK] = FALSE;
 			for (t = 0; t < NbTracks; t++)
 				InterlaceTrack(nDSK, t);
@@ -638,10 +607,8 @@ void CManageDskDlg::CheckInterlace(int nDSK)
 }
 
 
-BOOL CManageDskDlg::CheckSaved(int nDSK)
-{
-	if (!IsDskSaved[nDSK])
-	{
+BOOL CManageDskDlg::CheckSaved(int nDSK) {
+	if (!IsDskSaved[nDSK]) {
 		sprintf(Msg, GetTexteLoc(72), NomDsk[nDSK]);
 		if (MessageBox(Msg, NULL, MB_YESNO | MB_ICONQUESTION) == IDYES)
 			IsDskSaved[nDSK] = TRUE;
@@ -650,16 +617,13 @@ BOOL CManageDskDlg::CheckSaved(int nDSK)
 }
 
 
-void CManageDskDlg::ReadNewDSK(char * Nom, int nDSK)
-{
-	if (CheckSaved(nDSK))
-	{
+void CManageDskDlg::ReadNewDSK(char* Nom, int nDSK) {
+	if (CheckSaved(nDSK)) {
 		strcpy(NomDsk[nDSK], Nom);
 		m_NomDsk[nDSK].SetWindowText(Nom);
 
 		// Lecture DSK
-		if (ReadDsk(nDSK, Nom))
-		{
+		if (ReadDsk(nDSK, Nom)) {
 			IsDsk[nDSK] = TRUE;
 
 			// Vérifier validité (format standard) du DSK
@@ -667,21 +631,19 @@ void CManageDskDlg::ReadNewDSK(char * Nom, int nDSK)
 			if (!IsDskValid[nDSK])
 				MessageBox(GetTexteLoc(20));
 			else
-				if (IsReadable(nDSK))
-				{
+				if (IsReadable(nDSK)) {
 					//
 					// Récupère la table des répertoires initiale
 					//
 					for (int i = 0; i < 64; i++)
 						memcpy(&TabDirInit[nDSK][i]
-							, GetInfoDirEntry(nDSK, i)
+						, GetInfoDirEntry(nDSK, i)
 							, sizeof(StDirEntry)
-						);
+							);
 					CheckInterlace(nDSK);
 				}
 		}
-		else
-		{
+		else {
 			wsprintf(Msg, GetTexteLoc(75), Nom);
 			MessageBox(Msg, NULL, MB_ICONEXCLAMATION);
 			IsDskValid[nDSK] = FALSE;
@@ -695,16 +657,14 @@ void CManageDskDlg::ReadNewDSK(char * Nom, int nDSK)
 //
 // Lecture d'un fichier DSK
 //
-void CManageDskDlg::OnLire(int nDSK)
-{
+void CManageDskDlg::OnLire(int nDSK) {
 	static char LastDir[2][256];
 
-	if (CheckSaved(nDSK))
-	{
+	if (CheckSaved(nDSK)) {
 		CFileDialog f(TRUE, NULL, NULL, OFN_FILEMUSTEXIST, GetTexteLoc(19));
 		f.m_ofn.lpstrInitialDir = LastDir[nDSK];
 		if (f.DoModal() == IDOK)
-			ReadNewDSK((char *)(const char *)f.GetPathName(), nDSK);
+			ReadNewDSK((char*)(const char*)f.GetPathName(), nDSK);
 	}
 }
 
@@ -712,12 +672,10 @@ void CManageDskDlg::OnLire(int nDSK)
 //
 // Sauvegarde du fichier DSK en demandant le nom
 //
-void CManageDskDlg::OnSauve(int nDSK)
-{
+void CManageDskDlg::OnSauve(int nDSK) {
 	static char LastDir[2][256];
-	char * Nom = NomDsk[nDSK];
-	if (IsDsk[nDSK])
-	{
+	char* Nom = NomDsk[nDSK];
+	if (IsDsk[nDSK]) {
 		CFileDialog f(FALSE
 			, "*.DSK"
 			, Nom
@@ -725,8 +683,7 @@ void CManageDskDlg::OnSauve(int nDSK)
 			, GetTexteLoc(19)
 		);
 		f.m_ofn.lpstrInitialDir = LastDir[nDSK];
-		if (f.DoModal() == IDOK)
-		{
+		if (f.DoModal() == IDOK) {
 			IsDskSaved[nDSK] = TRUE;
 			strcpy(Nom, f.GetPathName());
 			strcpy(LastDir[nDSK], Nom);
@@ -741,11 +698,9 @@ void CManageDskDlg::OnSauve(int nDSK)
 //
 // Sauvegarde "directe" du fichier DSK
 //
-void CManageDskDlg::OnSauveDirect(int nDSK)
-{
-	char * Nom = NomDsk[nDSK];
-	if (*Nom)
-	{
+void CManageDskDlg::OnSauveDirect(int nDSK) {
+	char* Nom = NomDsk[nDSK];
+	if (*Nom) {
 		IsDskSaved[nDSK] = TRUE;
 		WriteDsk(nDSK, Nom);
 		memcpy(TabDirInit[nDSK], TabDir[nDSK], sizeof(TabDir[0]));
@@ -760,56 +715,47 @@ void CManageDskDlg::OnSauveDirect(int nDSK)
 //
 // Gestion du "click droit" sur la liste des fichiers
 //
-void CManageDskDlg::OnRclickList(int nDSK, NMHDR * pNMHDR)
-{
+void CManageDskDlg::OnRclickList(int nDSK, NMHDR* pNMHDR) {
 	char Tmp[128];
-	CListCtrl * Liste = &m_Liste[nDSK];
+	CListCtrl* Liste = &m_Liste[nDSK];
 	POSITION pos = Liste->GetFirstSelectedItemPosition();
-	if (pos)
-	{
+	if (pos) {
 		int nItem = Liste->GetNextSelectedItem(pos);
 		// Recherche le direntry correspondant
 		int i = PosItem[nDSK][nItem];
 		CInfoFichier Info(nDSK, TabDir[nDSK], i, FALSE);
 		Info.DoModal();
-		if (Info.IsValide())
-		{
+		if (Info.IsValide()) {
 			char NomFic[16];
 			BOOL First = FALSE;
-			char * p;
+			char* p;
 
 			strcpy(NomFic, GetNomAmsdos(TabDir[nDSK][i].Nom));
 			int User = TabDir[nDSK][i].User;
 			int NewUser = atoi(Info.GetUser());
 			int ind = -1;
-			if (User != NewUser)
-			{
+			if (User != NewUser) {
 				ind = FileExist(nDSK, NomFic, NewUser);
-				if (ind != -1)
-				{
+				if (ind != -1) {
 					sprintf(Tmp, GetTexteLoc(68), NomFic);
-					if (MessageBox(Tmp, NULL, MB_YESNO) == IDYES)
-					{
+					if (MessageBox(Tmp, NULL, MB_YESNO) == IDYES) {
 						Supprime(nDSK, ind, FALSE);
 						ind = -1;
 					}
 				}
 			}
-			if (ind == -1)
-			{
+			if (ind == -1) {
 				IsDskSaved[nDSK] = FALSE; // Modifications effectuées sur la disquette
-				do
-				{
+				do {
 					//
 					// Relecture du premier bloc du fichier
 					//
-					BYTE * b = ReadBloc(nDSK, TabDir[nDSK][i].Blocks[0]);
-					BYTE * e = (BYTE *)Info.GetAms();
+					BYTE* b = ReadBloc(nDSK, TabDir[nDSK][i].Blocks[0]);
+					BYTE* e = (BYTE*)Info.GetAms();
 					//
 					// Recopie l'en-tête amsdos modifiée par l'utilisateur
 					//
-					if (!First && CheckAmsdos(b))
-					{
+					if (!First && CheckAmsdos(b)) {
 						memcpy(b, e, sizeof(StAmsdos));
 						First = TRUE;
 					}
@@ -841,7 +787,8 @@ void CManageDskDlg::OnRclickList(int nDSK, NMHDR * pNMHDR)
 					//
 					WriteBloc(nDSK, TabDir[nDSK][i].Blocks[0], b);
 					p = GetNomAmsdos(TabDir[nDSK][++i].Nom);
-				} while (!strncmp(NomFic
+				}
+				while (!strncmp(NomFic
 					, p
 					, max(strlen(p), strlen(NomFic))
 				)
@@ -855,31 +802,26 @@ void CManageDskDlg::OnRclickList(int nDSK, NMHDR * pNMHDR)
 
 
 
-int CManageDskDlg::GetFic(int nDSK, int Indice, int Ko, BYTE * BufOut, BOOL Strict)
-{
+int CManageDskDlg::GetFic(int nDSK, int Indice, int Ko, BYTE* BufOut, BOOL Strict) {
 	int PosBufOut = 0;
 	char NomFic[16];
 	int i = Indice;
-	char * p;
+	char* p;
 	int lMax = 0x1000000;
 	BOOL FirstBlock = TRUE;
 	int LgE = sizeof(StAmsdos);       // Taille En-Tête
 
 	strcpy(NomFic, GetNomAmsdos(TabDir[nDSK][i].Nom));
 	int User = TabDir[nDSK][i].User;
-	do
-	{
+	do {
 		// Longueur du fichier
 		int l = (TabDir[nDSK][i].NbPages + 7) >> 3;
-		for (int j = 0; j < l; j++)
-		{
+		for (int j = 0; j < l; j++) {
 			int TailleBloc = 1024;
-			BYTE * p = ReadBloc(nDSK, TabDir[nDSK][i].Blocks[j]);
-			if (FirstBlock)
-			{
-				if (CheckAmsdos(p))
-				{
-					StAmsdos * Ams = (StAmsdos *)p;
+			BYTE* p = ReadBloc(nDSK, TabDir[nDSK][i].Blocks[j]);
+			if (FirstBlock) {
+				if (CheckAmsdos(p)) {
+					StAmsdos* Ams = (StAmsdos*)p;
 					if (Ams->Length >= Ams->LogicalLength)
 						lMax = Ams->Length + LgE;
 					else
@@ -893,21 +835,18 @@ int CManageDskDlg::GetFic(int nDSK, int Indice, int Ko, BYTE * BufOut, BOOL Stri
 					//
 					// Supprime en-tête si mode ASCII
 					//
-					if (TypeModeExport[nDSK] == MODE_ASCII && !Strict)
-					{
+					if (TypeModeExport[nDSK] == MODE_ASCII && !Strict) {
 						TailleBloc -= LgE;
 						lMax -= LgE;
 						memcpy(p, &p[LgE], TailleBloc);
 					}
 				}
-				else
-				{
-					if (TypeModeExport[nDSK] == MODE_BINAIRE && !Strict)
-					{
+				else {
+					if (TypeModeExport[nDSK] == MODE_BINAIRE && !Strict) {
 						//
 						// Ajoute en-tête amsdos
 						//
-						StAmsdos * e = CreeEnteteAmsdos(NomFic, (USHORT)(Ko << 10));
+						StAmsdos* e = CreeEnteteAmsdos(NomFic, (USHORT)(Ko << 10));
 						memcpy(&BufOut[PosBufOut], e, LgE);
 						PosBufOut += LgE;
 					}
@@ -918,15 +857,15 @@ int CManageDskDlg::GetFic(int nDSK, int Indice, int Ko, BYTE * BufOut, BOOL Stri
 				FirstBlock = FALSE;
 			}
 			int NbOctets = min(lMax, TailleBloc);
-			if (NbOctets > 0)
-			{
+			if (NbOctets > 0) {
 				memcpy(&BufOut[PosBufOut], p, NbOctets);
 				PosBufOut += NbOctets;
 			}
 			lMax -= NbOctets;
 		}
 		p = GetNomAmsdos(TabDir[nDSK][++i].Nom);
-	} while (!strncmp(NomFic
+	}
+	while (!strncmp(NomFic
 		, p
 		, max(strlen(p), strlen(NomFic))
 	)
@@ -943,7 +882,7 @@ void CManageDskDlg::OnExport(int nDSK) {
 	static char LastDir[2][256];
 	DWORD Lg;
 
-	CListCtrl * Liste = &m_Liste[nDSK];
+	CListCtrl* Liste = &m_Liste[nDSK];
 	POSITION pos = Liste->GetFirstSelectedItemPosition();
 	while (pos) {
 		int nItem = Liste->GetNextSelectedItem(pos);
@@ -969,16 +908,14 @@ void CManageDskDlg::OnExport(int nDSK) {
 //
 // Renommer des fichiers
 //
-void CManageDskDlg::OnRenomme(int nDSK)
-{
+void CManageDskDlg::OnRenomme(int nDSK) {
 	char NomFic[32];
 	char Tmp[128];
 	BOOL Modif = FALSE;
 
-	CListCtrl * Liste = &m_Liste[nDSK];
+	CListCtrl* Liste = &m_Liste[nDSK];
 	POSITION pos = Liste->GetFirstSelectedItemPosition();
-	while (pos)
-	{
+	while (pos) {
 		//
 		// Parcourir tous les fichiers sélectionnés
 		//
@@ -990,17 +927,15 @@ void CManageDskDlg::OnRenomme(int nDSK)
 		//
 		// Si appui sur bp "valider"
 		//
-		if (Info.IsValide())
-		{
+		if (Info.IsValide()) {
 			StDirEntry DirLoc;
 
 			memset(DirLoc.Nom, ' ', 8);
 			memset(DirLoc.Ext, ' ', 3);
 			int User = atoi(Info.GetUser());
 			strcpy(NomFic, Info.GetNom());
-			char * p = strchr(NomFic, '.');
-			if (p)
-			{
+			char* p = strchr(NomFic, '.');
+			if (p) {
 				p++;
 				memcpy(DirLoc.Nom, NomFic, p - NomFic - 1);
 				memcpy(DirLoc.Ext, p, min(strlen(p), 3));
@@ -1008,27 +943,24 @@ void CManageDskDlg::OnRenomme(int nDSK)
 			else
 				memcpy(DirLoc.Nom, NomFic, min(strlen(NomFic), 8));
 
-			int ind = FileExist(nDSK, (char *)DirLoc.Nom, User);
-			if (ind != -1)
-			{
+			int ind = FileExist(nDSK, (char*)DirLoc.Nom, User);
+			if (ind != -1) {
 				sprintf(Tmp, GetTexteLoc(68), NomFic);
-				if (MessageBox(Tmp, NULL, MB_YESNO) == IDYES)
-				{
+				if (MessageBox(Tmp, NULL, MB_YESNO) == IDYES) {
 					Supprime(nDSK, ind, FALSE);
 					ind = -1;
 				}
 			}
-			if (ind == -1)
-			{
+			if (ind == -1) {
 				strcpy(NomFic, GetNomAmsdos(TabDir[nDSK][i].Nom));
 				DirLoc.User = (BYTE)User;
-				do
-				{
+				do {
 					TabDir[nDSK][i].User = (BYTE)User;
 					memcpy(TabDir[nDSK][i].Nom, DirLoc.Nom, 11);
 					SetInfoDirEntry(nDSK, i, &TabDir[nDSK][i]);
 					p = GetNomAmsdos(TabDir[nDSK][++i].Nom);
-				} while (!strncmp(NomFic
+				}
+				while (!strncmp(NomFic
 					, p
 					, max(strlen(p), strlen(NomFic))
 				)
@@ -1050,22 +982,18 @@ void CManageDskDlg::OnRenomme(int nDSK)
 //
 // Suppression d'un fichier
 //
-void CManageDskDlg::Supprime(int nDSK, int Indice, BOOL Kill)
-{
+void CManageDskDlg::Supprime(int nDSK, int Indice, BOOL Kill) {
 	static BYTE BufBloc[1024];
 	char NomFic[16];
 	int i = Indice;
 	strcpy(NomFic, GetNomAmsdos(TabDir[nDSK][i].Nom));
 	int User = TabDir[nDSK][i].User;
-	char * p;
-	do
-	{
+	char* p;
+	do {
 		TabDir[nDSK][i].User = USER_DELETED;
-		if (Kill)
-		{
+		if (Kill) {
 			memset(BufBloc, USER_DELETED, sizeof(BufBloc));
-			for (int b = 0; b < 16; b++)
-			{
+			for (int b = 0; b < 16; b++) {
 				int numB = TabDir[nDSK][i].Blocks[b];
 				if (numB && numB != USER_DELETED)
 					WriteBloc(nDSK, numB, BufBloc);
@@ -1074,7 +1002,8 @@ void CManageDskDlg::Supprime(int nDSK, int Indice, BOOL Kill)
 		}
 		SetInfoDirEntry(nDSK, i, &TabDir[nDSK][i]);
 		p = GetNomAmsdos(TabDir[nDSK][++i].Nom);
-	} while (!strncmp(NomFic
+	}
+	while (!strncmp(NomFic
 		, p
 		, max(strlen(p), strlen(NomFic))
 	)
@@ -1086,20 +1015,17 @@ void CManageDskDlg::Supprime(int nDSK, int Indice, BOOL Kill)
 //
 // Supprime des fichiers
 //
-void CManageDskDlg::OnSupprime(int nDSK)
-{
+void CManageDskDlg::OnSupprime(int nDSK) {
 	int Retour = RET_NON;
 	BOOL Kill = FALSE;
 
-	CListCtrl * Liste = &m_Liste[nDSK];
+	CListCtrl* Liste = &m_Liste[nDSK];
 	POSITION pos = Liste->GetFirstSelectedItemPosition();
-	while (pos)
-	{
+	while (pos) {
 		int nItem = Liste->GetNextSelectedItem(pos);
 		// Recherche le direntry correspondant
 		int Indice = PosItem[nDSK][nItem];
-		if (Retour != RET_OUITOUT)
-		{
+		if (Retour != RET_OUITOUT) {
 			COuiNon d(GetNomAmsdos(TabDir[nDSK][Indice].Nom)
 				, GetTexteLoc(21)
 				, pos != NULL
@@ -1108,8 +1034,7 @@ void CManageDskDlg::OnSupprime(int nDSK)
 			Retour = d.GetRet();
 			Kill = d.GetKill();
 		}
-		if (Retour == RET_OUI || Retour == RET_OUITOUT)
-		{
+		if (Retour == RET_OUI || Retour == RET_OUITOUT) {
 			IsDskSaved[nDSK] = FALSE; // Modifications effectuées sur la disquette
 			Supprime(nDSK, Indice, Kill);
 		}
@@ -1121,13 +1046,11 @@ void CManageDskDlg::OnSupprime(int nDSK)
 //
 // Initialisation de l'interface (textes en fonction de la langue)
 //
-void CManageDskDlg::SetInterface(int l)
-{
+void CManageDskDlg::SetInterface(int l) {
 	Langue = l;
 	SetLangue(l);
-	for (int nDSK = 0; nDSK < 2; nDSK++)
-	{
-		CListCtrl * Liste = &m_Liste[nDSK];
+	for (int nDSK = 0; nDSK < 2; nDSK++) {
+		CListCtrl* Liste = &m_Liste[nDSK];
 		int nColumnCount = Liste->GetHeaderCtrl()->GetItemCount();
 		for (int i = 0; i < nColumnCount; i++)
 			Liste->DeleteColumn(0);
@@ -1189,17 +1112,15 @@ void CManageDskDlg::SetInterface(int l)
 //
 // Voir un fichier
 //
-void CManageDskDlg::OnEditFic(int nDSK)
-{
+void CManageDskDlg::OnEditFic(int nDSK) {
 	static BYTE BufFile[MAX_FILESIZE];
 	int LongFic = 0;
 	int LgE = sizeof(StAmsdos);       // Taille En-Tête
 
 	memset(BufFile, 0, sizeof(BufFile));
-	CListCtrl * Liste = &m_Liste[nDSK];
+	CListCtrl* Liste = &m_Liste[nDSK];
 	POSITION pos = Liste->GetFirstSelectedItemPosition();
-	while (pos)
-	{
+	while (pos) {
 		int nItem = Liste->GetNextSelectedItem(pos);
 		Liste->GetItemText(nItem, COL_TAILLE, Msg, sizeof(Msg));
 
@@ -1208,25 +1129,21 @@ void CManageDskDlg::OnEditFic(int nDSK)
 		char NomFic[16];
 		int i = Indice;
 		BOOL FirstBlock = TRUE;
-		StAmsdos * FirstEntry = (StAmsdos *)ReadBloc(nDSK, TabDir[nDSK][i].Blocks[0]);
+		StAmsdos* FirstEntry = (StAmsdos*)ReadBloc(nDSK, TabDir[nDSK][i].Blocks[0]);
 		BOOL Type = FirstEntry->FileType;
 		strcpy(NomFic, GetNomAmsdos(TabDir[nDSK][i].Nom));
 		int User = TabDir[nDSK][i].User;
-		char * p;
+		char* p;
 		int lMax = sizeof(BufFile);
-		do
-		{
+		do {
 			// Longueur du fichier
 			int l = (TabDir[nDSK][i].NbPages + 7) >> 3;
-			for (int j = 0; j < l; j++)
-			{
+			for (int j = 0; j < l; j++) {
 				int TailleBloc = 1024;
-				BYTE * p = ReadBloc(nDSK, TabDir[nDSK][i].Blocks[j]);
-				if (FirstBlock)
-				{
-					if (CheckAmsdos(p))
-					{
-						StAmsdos * Ams = (StAmsdos *)p;
+				BYTE* p = ReadBloc(nDSK, TabDir[nDSK][i].Blocks[j]);
+				if (FirstBlock) {
+					if (CheckAmsdos(p)) {
+						StAmsdos* Ams = (StAmsdos*)p;
 						if (Ams->Length >= Ams->LogicalLength)
 							lMax = Ams->Length + LgE;
 						else
@@ -1241,15 +1158,15 @@ void CManageDskDlg::OnEditFic(int nDSK)
 					FirstBlock = FALSE;
 				}
 				int NbOctets = min(lMax, TailleBloc);
-				if (NbOctets > 0)
-				{
+				if (NbOctets > 0) {
 					memcpy(&BufFile[LongFic], p, NbOctets);
 					LongFic += NbOctets;
 				}
 				lMax -= 1024;
 			}
 			p = GetNomAmsdos(TabDir[nDSK][++i].Nom);
-		} while (!strncmp(NomFic
+		}
+		while (!strncmp(NomFic
 			, p
 			, max(strlen(p), strlen(NomFic))
 		)
@@ -1260,41 +1177,36 @@ void CManageDskDlg::OnEditFic(int nDSK)
 			, LongFic
 			, TypeModeExport[nDSK]
 			, nDSK
-			, Langue
-			, Type == 1
-		).DoModal();
+				, Langue
+				, Type == 1
+				).DoModal();
 	}
 }
 
 
 void CManageDskDlg::TryCopie(int nDSK
-	, BYTE * Buff
-	, char * NomFic
+	, BYTE* Buff
+	, char* NomFic
 	, int Lg
 	, int MaxBlocs
 	, int User
-)
-{
+) {
 	char Tmp[128];
 	int Retry = 0;
 	char NomLoc[16];
 
 	strcpy(NomLoc, NomFic);
-	do
-	{
+	do {
 		Retry = 0;
 		// Ajoute le fichier sur le DSK
 		int Res = CopieFichier(nDSK, Buff, NomLoc, Lg, MaxBlocs, User);
-		if (Res == ERR_NO_ERR)
-		{
+		if (Res == ERR_NO_ERR) {
 			ReadDirDsk(nDSK);
 			IsDskSaved[nDSK] = FALSE; // Modifications effectuées sur la disquette
 		}
-		else
-		{
+		else {
 			// Erreur d'ajout du fichier...
-			switch (Res)
-			{
+			switch (Res) {
 			case ERR_NO_DIRENTRY:
 				MessageBox(GetTexteLoc(17));
 				break;
@@ -1305,32 +1217,29 @@ void CManageDskDlg::TryCopie(int nDSK
 
 			case ERR_FILE_EXIST:
 				sprintf(Tmp, GetTexteLoc(68), NomLoc);
-				if (MessageBox(Tmp, NULL, MB_YESNO) == IDYES)
-				{
-					StDirEntry * d = GetNomDir(NomLoc);
-					Supprime(nDSK, FileExist(nDSK, (char *)d->Nom, User), FALSE);
+				if (MessageBox(Tmp, NULL, MB_YESNO) == IDYES) {
+					StDirEntry* d = GetNomDir(NomLoc);
+					Supprime(nDSK, FileExist(nDSK, (char*)d->Nom, User), FALSE);
 					Retry = 1;
 				}
 				break;
 			}
 		}
-	} while (Retry);
+	}
+	while (Retry);
 }
 
 //
 // Copie de fichiers du DSK x vers le DSK y
 //
-void CManageDskDlg::OnSend(int nDSK_Src)
-{
+void CManageDskDlg::OnSend(int nDSK_Src) {
 	int nDSK_Dest = nDSK_Src == DSK_0 ? DSK_1 : DSK_0;
 
-	if (IsDskValid[nDSK_Src])
-	{
+	if (IsDskValid[nDSK_Src]) {
 		POSITION pos = m_Liste[nDSK_Src].GetFirstSelectedItemPosition();
 		if (pos && IsDskValid[nDSK_Dest]) // Copie de fichiers
 		{
-			while (pos)
-			{
+			while (pos) {
 				int nItem = m_Liste[nDSK_Src].GetNextSelectedItem(pos);
 				m_Liste[nDSK_Src].GetItemText(nItem, COL_TAILLE, Msg, sizeof(Msg));
 				int Ko = atoi(Msg);
@@ -1362,8 +1271,7 @@ void CManageDskDlg::OnSend(int nDSK_Src)
 //
 // Affichage en mode "directory"
 //
-void CManageDskDlg::OnVisuDir(int nDSK)
-{
+void CManageDskDlg::OnVisuDir(int nDSK) {
 	memcpy(TabDirInit[nDSK], TabDir[nDSK], sizeof(TabDir[0]));
 	CListDir Liste(TabDirInit[nDSK]);
 	Liste.DoModal();
@@ -1373,10 +1281,8 @@ void CManageDskDlg::OnVisuDir(int nDSK)
 //
 // échange du DSK 0 et du DSK 1
 //
-void CManageDskDlg::OnBpSwapDsk()
-{
-	if (IsDskValid[DSK_0] && IsDskValid[DSK_1])
-	{
+void CManageDskDlg::OnBpSwapDsk() {
+	if (IsDskValid[DSK_0] && IsDskValid[DSK_1]) {
 		SwapDsk();
 		ReadDirDsk(DSK_0);
 		ReadDirDsk(DSK_1);
@@ -1393,41 +1299,32 @@ void CManageDskDlg::OnBpSwapDsk()
 //
 // Comparer DSK 0 et DSK 1 ou fichiers si sélectionnés
 //
-void CManageDskDlg::OnBpCompare()
-{
+void CManageDskDlg::OnBpCompare() {
 	static BYTE BufFicTmp1[0x100000];
 
-	if (IsDskValid[DSK_0] && IsDskValid[DSK_1])
-	{
+	if (IsDskValid[DSK_0] && IsDskValid[DSK_1]) {
 		POSITION pos0 = m_Liste[DSK_0].GetFirstSelectedItemPosition();
 		POSITION pos1 = m_Liste[DSK_1].GetFirstSelectedItemPosition();
-		if (!pos0 || !pos1)
-		{
+		if (!pos0 || !pos1) {
 			// Comparaison DSK
 			int DernPiste = GetNbTracks(DSK_0);
 			BOOL Egal = (DernPiste == GetNbTracks(DSK_1));
-			if (Egal)
-			{
-				for (int Piste = 0; Piste < DernPiste; Piste++)
-				{
-					CPCEMUTrack * Trk0 = GetInfoTrack(DSK_0, Piste);
-					CPCEMUTrack * Trk1 = GetInfoTrack(DSK_1, Piste);
-					if (Trk0->NbSect == Trk1->NbSect && Trk0->SectSize == Trk1->SectSize)
-					{
-						for (int s = 0; s < Trk0->NbSect; s++)
-						{
-							BYTE * Datas0 = ReadSect(DSK_0, Piste, s, FALSE);
-							BYTE * Datas1 = ReadSect(DSK_1, Piste, s, FALSE);
+			if (Egal) {
+				for (int Piste = 0; Piste < DernPiste; Piste++) {
+					CPCEMUTrack* Trk0 = GetInfoTrack(DSK_0, Piste);
+					CPCEMUTrack* Trk1 = GetInfoTrack(DSK_1, Piste);
+					if (Trk0->NbSect == Trk1->NbSect && Trk0->SectSize == Trk1->SectSize) {
+						for (int s = 0; s < Trk0->NbSect; s++) {
+							BYTE* Datas0 = ReadSect(DSK_0, Piste, s, FALSE);
+							BYTE* Datas1 = ReadSect(DSK_1, Piste, s, FALSE);
 							for (int i = 0; i < Trk0->SectSize; i++)
-								if (Datas0[i] != Datas1[i])
-								{
+								if (Datas0[i] != Datas1[i]) {
 									Egal = FALSE;
 									break;
 								}
 						}
 					}
-					else
-					{
+					else {
 						Egal = FALSE;
 						break;
 					}
@@ -1435,21 +1332,17 @@ void CManageDskDlg::OnBpCompare()
 			}
 			MessageBox(GetTexteLoc(Egal ? 126 : 127));
 		}
-		else
-		{
+		else {
 			// Comparaision fichiers
-			while (pos0 && pos1)
-			{
+			while (pos0 && pos1) {
 				int Indice0 = PosItem[DSK_0][m_Liste[DSK_0].GetNextSelectedItem(pos0)];
 				int Indice1 = PosItem[DSK_1][m_Liste[DSK_1].GetNextSelectedItem(pos1)];
 				int l0 = GetFic(DSK_0, Indice0, 0, BufFicTmp, TRUE);
 				int l1 = GetFic(DSK_1, Indice1, 0, BufFicTmp1, TRUE);
 				BOOL Egal = (l0 == l1);
-				if (Egal)
-				{
+				if (Egal) {
 					for (int i = 0; i < l0; i++)
-						if (BufFicTmp[i] != BufFicTmp1[i])
-						{
+						if (BufFicTmp[i] != BufFicTmp1[i]) {
 							Egal = FALSE;
 							break;
 						}
@@ -1466,8 +1359,7 @@ void CManageDskDlg::OnBpCompare()
 }
 
 
-void CManageDskDlg::OnWriteFloppy(int nDSK)
-{
+void CManageDskDlg::OnWriteFloppy(int nDSK) {
 	CFloppyLowLevel(nDSK
 		, CMD_WRITE_DIRECT
 		, m_MaxPistes.GetCheck() ? MAX_TRACKS : MAX_PISTE_STD
@@ -1475,12 +1367,10 @@ void CManageDskDlg::OnWriteFloppy(int nDSK)
 }
 
 
-void CManageDskDlg::OnFormatFloppy(int nDSK)
-{
+void CManageDskDlg::OnFormatFloppy(int nDSK) {
 	CInputTracks c;
 	c.DoModal();
-	if (c.IsValide())
-	{
+	if (c.IsValide()) {
 		int NbTracks = c.GetNbTracks(); // ###"
 		int NbSects = c.GetNbSects();
 		IsDsk[nDSK] = IsDskValid[nDSK] = IsDskSaved[nDSK] = TRUE;
@@ -1494,15 +1384,13 @@ void CManageDskDlg::OnFormatFloppy(int nDSK)
 }
 
 
-void CManageDskDlg::OnReadFloppy(int nDSK)
-{
+void CManageDskDlg::OnReadFloppy(int nDSK) {
 	CFloppyLowLevel d(nDSK
 		, CMD_READ_DIRECT
 		, m_MaxPistes.GetCheck() ? MAX_TRACKS : MAX_PISTE_STD
 	);
 	d.DoModal();
-	if (d.GetCreation())
-	{
+	if (d.GetCreation()) {
 		IsDsk[nDSK] = IsDskSaved[nDSK] = TRUE;
 		IsDskValid[nDSK] = CheckDsk(nDSK);
 		if (!IsDskValid[nDSK])
@@ -1515,20 +1403,17 @@ void CManageDskDlg::OnReadFloppy(int nDSK)
 	}
 }
 
-void CManageDskDlg::OnDblWindow(void)
-{
+void CManageDskDlg::OnDblWindow(void) {
 	WINDOWPLACEMENT plc;
 	GetWindowPlacement(&plc);
 	int TailleY = plc.rcNormalPosition.bottom - plc.rcNormalPosition.top;
-	if (m_DblWindow.GetCheck())
-	{
+	if (m_DblWindow.GetCheck()) {
 		m_BpSwapDsk.ShowWindow(TRUE);
 		m_BpCompare.ShowWindow(TRUE);
 		m_BpSend[DSK_0].ShowWindow(TRUE);
 		SetWindowPos(NULL, 0, 0, SIZE_X_2_WINDOWS, TailleY, SWP_NOMOVE);
 	}
-	else
-	{
+	else {
 		m_BpSwapDsk.ShowWindow(FALSE);
 		m_BpCompare.ShowWindow(FALSE);
 		m_BpSend[DSK_0].ShowWindow(FALSE);
@@ -1541,16 +1426,13 @@ void CManageDskDlg::OnDblWindow(void)
 //
 // Demande de sortie du programme
 //
-void CManageDskDlg::OnCancel()
-{
+void CManageDskDlg::OnCancel() {
 	BOOL Exit = TRUE;
-	if (IsDsk[DSK_0] && !IsDskSaved[DSK_0])
-	{
+	if (IsDsk[DSK_0] && !IsDskSaved[DSK_0]) {
 		sprintf(Msg, GetTexteLoc(73), NomDsk[DSK_0]);
 		Exit = (MessageBox(Msg, NULL, MB_YESNO | MB_ICONQUESTION) == IDYES);
 	}
-	if (Exit && IsDsk[DSK_1] && !IsDskSaved[DSK_1])
-	{
+	if (Exit && IsDsk[DSK_1] && !IsDskSaved[DSK_1]) {
 		sprintf(Msg, GetTexteLoc(73), NomDsk[DSK_1]);
 		Exit = (MessageBox(Msg, NULL, MB_YESNO | MB_ICONQUESTION) == IDYES);
 	}
@@ -1559,21 +1441,17 @@ void CManageDskDlg::OnCancel()
 }
 
 
-void CManageDskDlg::OnDropFiles(HDROP dropHandle)
-{
+void CManageDskDlg::OnDropFiles(HDROP dropHandle) {
 	static char NomFic[1024];
 	POINT pt;
 
 	DragQueryPoint(dropHandle, &pt);
-	if (pt.y >= 16 && pt.y <= 290)
-	{
+	if (pt.y >= 16 && pt.y <= 290) {
 		int numDsk = pt.x > SIZE_X_1_WINDOWS ? DSK_1 : DSK_0;
-		for (unsigned int i = 0; i < DragQueryFile(dropHandle, 0xFFFFFFFF, NULL, 0); i++)
-		{
+		for (unsigned int i = 0; i < DragQueryFile(dropHandle, 0xFFFFFFFF, NULL, 0); i++) {
 			DragQueryFile(dropHandle, i, NomFic, sizeof(NomFic));
 			int LastPt = -1;
-			for (unsigned int j = 0; j < strlen(NomFic); j++)
-			{
+			for (unsigned int j = 0; j < strlen(NomFic); j++) {
 				NomFic[j] = (char)toupper(NomFic[j]);
 				if (NomFic[j] == '.')
 					LastPt = j;
@@ -1589,16 +1467,13 @@ void CManageDskDlg::OnDropFiles(HDROP dropHandle)
 }
 
 
-void CMyListe::OnDropFiles(HDROP dropHandle)
-{
+void CMyListe::OnDropFiles(HDROP dropHandle) {
 	static char NomFic[1024];
 
-	for (unsigned int i = 0; i < DragQueryFile(dropHandle, 0xFFFFFFFF, NULL, 0); i++)
-	{
+	for (unsigned int i = 0; i < DragQueryFile(dropHandle, 0xFFFFFFFF, NULL, 0); i++) {
 		DragQueryFile(dropHandle, i, NomFic, sizeof(NomFic));
 		int LastPt = -1;
-		for (unsigned int j = 0; j < strlen(NomFic); j++)
-		{
+		for (unsigned int j = 0; j < strlen(NomFic); j++) {
 			NomFic[j] = (char)toupper(NomFic[j]);
 			if (NomFic[j] == '.')
 				LastPt = j;
@@ -1613,11 +1488,9 @@ void CMyListe::OnDropFiles(HDROP dropHandle)
 }
 
 
-void CManageDskDlg::OnCustomDrawList(int nDSK, NMHDR * pNMHDR)
-{
+void CManageDskDlg::OnCustomDrawList(int nDSK, NMHDR* pNMHDR) {
 	LPNMLVCUSTOMDRAW lpLVCustomDraw = reinterpret_cast<LPNMLVCUSTOMDRAW>(pNMHDR);
-	if (lpLVCustomDraw->nmcd.dwDrawStage == CDDS_ITEMPREPAINT)
-	{
+	if (lpLVCustomDraw->nmcd.dwDrawStage == CDDS_ITEMPREPAINT) {
 		CString s = m_Liste[nDSK].GetItemText(lpLVCustomDraw->nmcd.dwItemSpec, 1);
 		lpLVCustomDraw->clrText = RGB(atoi(s) == USER_DELETED ? 255 : 0, 0, 0);
 	}
