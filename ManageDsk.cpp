@@ -323,8 +323,8 @@ void CManageDskApp::ExportFichier(int nDSK, char* nomFic, bool withEntete) {
 	StDirEntry* Dir = GetInfoDirEntry(nDSK, indice);
 	HANDLE f = CreateFile(nomFic, GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, 0, NULL);
 	if (f != INVALID_HANDLE_VALUE) {
-		int NbOctets = GetFic(nDSK, Dir, indice, BufFicTmp), start = withEntete ? 0 : 128;
-		WriteFile(f, &BufFicTmp[start], NbOctets - start + 128, &Lg, NULL);
+		int NbOctets = GetFic(nDSK, Dir, indice, BufFicTmp), start = withEntete || !CheckAmsdos(BufFicTmp) ? 0 : 128;
+		WriteFile(f, &BufFicTmp[start], NbOctets - start, &Lg, NULL);
 		CloseHandle(f);
 	}
 }

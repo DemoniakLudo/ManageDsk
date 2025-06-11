@@ -430,29 +430,34 @@ void SetInfoDirEntry(int nDSK, int NumDir, StDirEntry* Dir) {
 }
 
 
-int CompareNomsAmsdos(char* n1, char* nAmsdos) {
-	char n2[13];
+void NormaliseNom(char* src, char* dst) {
 	int i = 0, addPt = 0;
-	while (*nAmsdos >= 32) {
-		if (*nAmsdos != ' ')
-			n2[i++] = *nAmsdos;
+	while (*src>= 32) {
+		if (*src!= ' ')
+			dst[i++] = *src;
 		else
 			if (!addPt) {
-				n2[i++] = '.';
+				dst[i++] = '.';
 				addPt = 1;
 			}
-		nAmsdos++;
+		src++;
 		if (i == 8 && !addPt) {
-			n2[i++] = '.';
+			dst[i++] = '.';
 			addPt = 1;
 		}
 	}
-	n2[i] = 0;
-	for (i = 0; i < 13; i++) {
+	dst[i] = 0;
+}
+
+int CompareNomsAmsdos(char* nTest, char* nAmsdos) {
+	char n1[16], n2[16];
+	NormaliseNom(nTest, n1);
+	NormaliseNom(nAmsdos, n2);
+	for (int i = 0; i < 13; i++) {
 		if (n2[i] == 0)
 			return 0;
 
-		if ((n1[i] & 0x5F) != (n2[i] & 0x5F))
+		if ((n1[i] & 0x5F) != (n2[i] & 0x5F) && n1[i]!=' ')
 			return 1;
 	}
 	return(0);
