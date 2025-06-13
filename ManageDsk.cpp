@@ -445,5 +445,6 @@ void CManageDskApp::DecomposeArg(char* argc) {
 		}
 	}
 	while (argc);
+	std::getchar();
 	FreeConsole();
 }

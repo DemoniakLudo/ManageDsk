@@ -665,6 +665,11 @@ static char * TabTextes[MAX_TEXTES][3] =
 		"Number of sectors :",
 		"Número de sectors :"
 	},
+	{
+		"Erreur sauvegarde %s",									// 130
+		"Error savind %s",
+		"Error guardado %s"
+	},
 };
 
 
@@ -683,11 +688,7 @@ void SetLangue(int l)
 //
 char * GetTexteLoc(int NumTexte)
 {
-	if ((NumTexte < MAX_TEXTES) && (Locale == LOC_FRANCAIS
-		|| Locale == LOC_ENGLISH
-		|| Locale == LOC_SPANISH
-		)
-		)
+	if ((NumTexte < MAX_TEXTES) && (Locale == LOC_FRANCAIS || Locale == LOC_ENGLISH || Locale == LOC_SPANISH))
 		return(TabTextes[NumTexte][Locale]);
 
 	// Texte ou langue inconnu

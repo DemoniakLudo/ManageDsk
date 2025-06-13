@@ -29,7 +29,7 @@ static char THIS_FILE[] = __FILE__;
 #endif
 
 
-#define     VERSION     "ManageDsk v0.23b "
+#define     VERSION     "ManageDsk v0.23c "
 
 #define     SIZE_X_1_WINDOWS    498
 #define     SIZE_X_2_WINDOWS    990
@@ -341,9 +341,9 @@ void CManageDskDlg::ReadDirDsk(int nDSK) {
 		//
 		for (i = 0; i < 64; i++)
 			memcpy(&TabDir[nDSK][i]
-			, GetInfoDirEntry(nDSK, i)
+				, GetInfoDirEntry(nDSK, i)
 				, sizeof(StDirEntry)
-				);
+			);
 
 		// Trier les fichiers
 		qsort(TabDir[nDSK], 64, sizeof(TabDir[0][0]), FctTri);
@@ -390,8 +390,7 @@ void CManageDskDlg::ReadDirDsk(int nDSK) {
 							t += TabDir[nDSK][p + i].NbPages;
 
 						p++;
-					}
-					while (TabDir[nDSK][p + i].NumPage && (p + i) < 64);
+					} while (TabDir[nDSK][p + i].NumPage && (p + i) < 64);
 					Liste->SetItemText(NbItems, COL_TAILLE, GetTaille((t + 7) >> 3));
 					PosItem[nDSK][NbItems++] = i;
 				}
@@ -434,8 +433,7 @@ void CManageDskDlg::AjouteUnFic(char* Nom, int nDSK) {
 
 			if (r)
 				q = ++r;
-		}
-		while (r);
+		} while (r);
 		strcpy(NomFic, GetNomAmsdos((BYTE*)q));
 
 		HANDLE fp = CreateFile(p, GENERIC_READ, 0, NULL, OPEN_EXISTING, 0, NULL);
@@ -637,9 +635,9 @@ void CManageDskDlg::ReadNewDSK(char* Nom, int nDSK) {
 					//
 					for (int i = 0; i < 64; i++)
 						memcpy(&TabDirInit[nDSK][i]
-						, GetInfoDirEntry(nDSK, i)
+							, GetInfoDirEntry(nDSK, i)
 							, sizeof(StDirEntry)
-							);
+						);
 					CheckInterlace(nDSK);
 				}
 		}
@@ -688,8 +686,12 @@ void CManageDskDlg::OnSauve(int nDSK) {
 			strcpy(Nom, f.GetPathName());
 			strcpy(LastDir[nDSK], Nom);
 			m_NomDsk[nDSK].SetWindowText(Nom);
-			WriteDsk(nDSK, Nom);
-			memcpy(TabDirInit[nDSK], TabDir[nDSK], sizeof(TabDir[0]));
+			if (WriteDsk(nDSK, Nom))
+				memcpy(TabDirInit[nDSK], TabDir[nDSK], sizeof(TabDir[0]));
+			else {
+				wsprintf(Msg, GetTexteLoc(130), Nom);
+				MessageBox(Msg);
+			}
 		}
 	}
 }
@@ -702,10 +704,15 @@ void CManageDskDlg::OnSauveDirect(int nDSK) {
 	char* Nom = NomDsk[nDSK];
 	if (*Nom) {
 		IsDskSaved[nDSK] = TRUE;
-		WriteDsk(nDSK, Nom);
-		memcpy(TabDirInit[nDSK], TabDir[nDSK], sizeof(TabDir[0]));
-		wsprintf(Msg, GetTexteLoc(47), Nom);
-		MessageBox(Msg);
+		if (WriteDsk(nDSK, Nom)) {
+			memcpy(TabDirInit[nDSK], TabDir[nDSK], sizeof(TabDir[0]));
+			wsprintf(Msg, GetTexteLoc(47), Nom);
+			MessageBox(Msg);
+		}
+		else {
+			wsprintf(Msg, GetTexteLoc(130), Nom);
+			MessageBox(Msg);
+		}
 	}
 	else
 		MessageBox(GetTexteLoc(48));
@@ -787,13 +794,7 @@ void CManageDskDlg::OnRclickList(int nDSK, NMHDR* pNMHDR) {
 					//
 					WriteBloc(nDSK, TabDir[nDSK][i].Blocks[0], b);
 					p = GetNomAmsdos(TabDir[nDSK][++i].Nom);
-				}
-				while (!strncmp(NomFic
-					, p
-					, max(strlen(p), strlen(NomFic))
-				)
-					&& User == TabDir[nDSK][i].User
-					);
+				} while (!strncmp(NomFic, p, max(strlen(p), strlen(NomFic))) && User == TabDir[nDSK][i].User);
 			}
 			ReadDirDsk(nDSK);
 		}
@@ -864,13 +865,7 @@ int CManageDskDlg::GetFic(int nDSK, int Indice, int Ko, BYTE* BufOut, BOOL Stric
 			lMax -= NbOctets;
 		}
 		p = GetNomAmsdos(TabDir[nDSK][++i].Nom);
-	}
-	while (!strncmp(NomFic
-		, p
-		, max(strlen(p), strlen(NomFic))
-	)
-		&& User == TabDir[nDSK][i].User
-		);
+	} while (!strncmp(NomFic, p, max(strlen(p), strlen(NomFic))) && User == TabDir[nDSK][i].User);
 	return(PosBufOut);
 }
 
@@ -959,13 +954,7 @@ void CManageDskDlg::OnRenomme(int nDSK) {
 					memcpy(TabDir[nDSK][i].Nom, DirLoc.Nom, 11);
 					SetInfoDirEntry(nDSK, i, &TabDir[nDSK][i]);
 					p = GetNomAmsdos(TabDir[nDSK][++i].Nom);
-				}
-				while (!strncmp(NomFic
-					, p
-					, max(strlen(p), strlen(NomFic))
-				)
-					&& User == TabDir[nDSK][i].User
-					);
+				} while (!strncmp(NomFic, p, max(strlen(p), strlen(NomFic))) && User == TabDir[nDSK][i].User);
 				Modif = TRUE;
 				IsDskSaved[nDSK] = FALSE; // Modifications effectuées sur la disquette
 			}
@@ -1002,8 +991,7 @@ void CManageDskDlg::Supprime(int nDSK, int Indice, BOOL Kill) {
 		}
 		SetInfoDirEntry(nDSK, i, &TabDir[nDSK][i]);
 		p = GetNomAmsdos(TabDir[nDSK][++i].Nom);
-	}
-	while (!strncmp(NomFic
+	} while (!strncmp(NomFic
 		, p
 		, max(strlen(p), strlen(NomFic))
 	)
@@ -1165,32 +1153,13 @@ void CManageDskDlg::OnEditFic(int nDSK) {
 				lMax -= 1024;
 			}
 			p = GetNomAmsdos(TabDir[nDSK][++i].Nom);
-		}
-		while (!strncmp(NomFic
-			, p
-			, max(strlen(p), strlen(NomFic))
-		)
-			&& User == TabDir[nDSK][i].User
-			);
-		CViewFile(NomFic
-			, BufFile
-			, LongFic
-			, TypeModeExport[nDSK]
-			, nDSK
-				, Langue
-				, Type == 1
-				).DoModal();
+		} while (!strncmp(NomFic, p, max(strlen(p), strlen(NomFic))) && User == TabDir[nDSK][i].User);
+		CViewFile(NomFic, BufFile, LongFic, TypeModeExport[nDSK], nDSK, Langue, Type == 1).DoModal();
 	}
 }
 
 
-void CManageDskDlg::TryCopie(int nDSK
-	, BYTE* Buff
-	, char* NomFic
-	, int Lg
-	, int MaxBlocs
-	, int User
-) {
+void CManageDskDlg::TryCopie(int nDSK, BYTE* Buff, char* NomFic, int Lg, int MaxBlocs, int User) {
 	char Tmp[128];
 	int Retry = 0;
 	char NomLoc[16];
@@ -1225,8 +1194,7 @@ void CManageDskDlg::TryCopie(int nDSK
 				break;
 			}
 		}
-	}
-	while (Retry);
+	} while (Retry);
 }
 
 //
